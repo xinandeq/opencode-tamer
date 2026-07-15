@@ -23,5 +23,13 @@
   },
   "license": "MIT",
   "keywords": ["opencode", "agent", "correction", "memory", "hook", "plugin"],
-  "author": "Chen Xin"
+  "author": "Chen Xin",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xinandeq/opencode-tamer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/xinandeq/opencode-tamer/issues"
+  },
+  "homepage": "https://github.com/xinandeq/opencode-tamer#readme"
 }

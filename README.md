@@ -10,7 +10,7 @@ It is not a general-purpose memory system. It keeps durable behavioral rules tha
 
 ## Current Status
 
-`v0.1.0 Technical Preview`
+`v0.1.1 Technical Preview`
 
 - OpenCode `1.18.1` verified
 - 51 local tests and 51 isolated cloud tests pass

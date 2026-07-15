@@ -32,6 +32,11 @@ export function initializeRulesFile(paths = getTamerPaths()): void {
   if (!existsSync(paths.rulesFile)) {
     copyFileSync(BUNDLED_SEEDS_FILE, paths.rulesFile)
   }
+  try {
+    chmodSync(paths.rulesFile, 0o600)
+  } catch {
+    // Some platforms do not implement POSIX modes.
+  }
 }
 
 export function loadRulesFile(paths = getTamerPaths()): TamerRulesFile {

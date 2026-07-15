@@ -1,6 +1,6 @@
 import { test } from "node:test"
 import assert from "node:assert/strict"
-import { mkdtempSync, readFileSync } from "node:fs"
+import { mkdtempSync, readFileSync, statSync } from "node:fs"
 import { join } from "node:path"
 import { tmpdir } from "node:os"
 import {
@@ -28,6 +28,7 @@ test("initializes a valid rules file from bundled seeds", () => {
   assert.equal(data.version, "0.1.0")
   assert.equal(data.rules.filter((rule) => rule.status === "active").length, 1)
   assert.equal(data.rules.find((rule) => rule.id === "seed_002")?.status, "active")
+  assert.equal(statSync(paths.rulesFile).mode & 0o777, 0o600)
 })
 
 test("creates and deduplicates a confirmed personal rule", () => {

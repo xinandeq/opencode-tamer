@@ -15,7 +15,7 @@ import {
 import { detectTriggers, hasExplicitMemoryConfirmation } from "./triggers.ts"
 import type { RuleStatus, TamerRule } from "./types.ts"
 
-const PLUGIN_VERSION = "0.1.0"
+const PLUGIN_VERSION = "0.1.1"
 
 function loadRules(): TamerRule[] {
   try {

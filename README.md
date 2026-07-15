@@ -10,7 +10,7 @@ It is not a general-purpose memory system. It keeps durable behavioral rules tha
 
 ## Current Status
 
-`v0.1.1 Technical Preview`
+`v0.1.2 Technical Preview`
 
 - OpenCode `1.18.1` verified
 - 51 local tests and 51 isolated cloud tests pass
@@ -53,9 +53,9 @@ When you correct the agent, Tamer detects the signal but does not save it automa
 Example:
 
 ```text
-User: 不对，声明完成前必须先运行相关测试。请记住这条规则。
-Agent: 建议保存为“完成前验证：声明完成前必须运行相关测试”，是否确认？
-User: 确认。
+User: Wrong. You must run the relevant tests before declaring completion. Remember this rule.
+Agent: I suggest saving: "Verify before completion: Run the relevant tests before declaring completion." Confirm?
+User: Confirmed.
 Agent: calls tamer_remember
 ```
 
@@ -71,7 +71,7 @@ Rules are deduplicated by normalized instruction. Writes are atomic, and hit cou
 
 ## Default Policy
 
-Only `破坏性命令阻断` is active on first install. It blocks matched patterns such as `rm -rf`, `git reset --hard`, `drop table`, and `dd if=`. The remaining bundled rules are disabled examples so Tamer does not silently impose the author's preferences on a new user.
+Only `Block destructive commands` is active on first install. It blocks matched patterns such as `rm -rf`, `git reset --hard`, `drop table`, and `dd if=`. The remaining bundled rules are disabled examples so Tamer does not silently impose the author's preferences on a new user.
 
 ## Data
 

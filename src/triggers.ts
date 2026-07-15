@@ -5,15 +5,14 @@
  * In v0.0, only logs the detection. v0.1+ will create rules.
  */
 
-// Correction trigger words (Chinese + English)
+// Correction trigger words
 const CORRECTION_TRIGGERS: RegExp[] = [
-  /不对/i, /错了/i, /记住/i, /纠正/i, /别再犯/i, /不是这样/i, /应该是/i, /改一下/i, /重新/i, /说过/i, /又来了/i, /不是/i,
   /wrong/i, /no[,.]/i, /stop/i, /don'?t/i, /remember/i, /correct/i, /fix/i, /not\s+that/i, /again/i,
 ];
 
 // Session end signals
 const SESSION_END_TRIGGERS: RegExp[] = [
-  /收工/i, /结束/i, /done/i, /finish/i, /wrap\s+up/i,
+  /done/i, /finish/i, /wrap\s+up/i,
 ];
 
 export interface TriggerResult {
@@ -24,9 +23,9 @@ export interface TriggerResult {
 }
 
 const MEMORY_CONFIRMATION_PATTERNS: RegExp[] = [
-  /^\s*(确认|我确认|明确确认|同意保存|确认保存|yes|confirmed)[。.!！]?\s*$/i,
-  /(?:我|本人)?(?:明确)?确认(?:保存|记住|把这条规则记住|这条规则)/i,
-  /(?:请|可以)记住这条规则/i,
+  /^\s*(yes|confirmed|I confirm)[.!]?\s*$/i,
+  /I (?:explicitly )?confirm (?:saving|remembering|this rule)/i,
+  /(?:please|you can) remember this rule/i,
 ]
 
 /** Return true only for an explicit request to persist a rule. */

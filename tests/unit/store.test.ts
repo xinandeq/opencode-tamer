@@ -33,8 +33,8 @@ test("initializes a valid rules file from bundled seeds", () => {
 
 test("creates and deduplicates a confirmed personal rule", () => {
   const paths = temporaryPaths()
-  const first = addPersonalRule({ name: "先验证", instruction: "修改后运行测试。" }, paths)
-  const duplicate = addPersonalRule({ name: "重复名称", instruction: "  修改后运行测试。  " }, paths)
+  const first = addPersonalRule({ name: "Verify first", instruction: "Run tests after changes." }, paths)
+  const duplicate = addPersonalRule({ name: "Duplicate name", instruction: "  Run tests after changes.  " }, paths)
   assert.equal(first.created, true)
   assert.equal(duplicate.created, false)
   assert.equal(duplicate.rule.id, first.rule.id)
@@ -43,7 +43,7 @@ test("creates and deduplicates a confirmed personal rule", () => {
 
 test("updates rule status and hit statistics atomically", () => {
   const paths = temporaryPaths()
-  const { rule } = addPersonalRule({ name: "先搜索", instruction: "不确定时先搜索。" }, paths)
+  const { rule } = addPersonalRule({ name: "Search first", instruction: "Search when uncertain." }, paths)
   assert.equal(setRuleStatus(rule.id, "disabled", paths)?.status, "disabled")
   markRuleHit(rule.id, paths)
   const updated = loadRulesFile(paths).rules.find((candidate) => candidate.id === rule.id)

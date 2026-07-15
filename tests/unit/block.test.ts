@@ -8,9 +8,9 @@ import type { TamerRule } from "../../src/types.ts"
 const testRules: TamerRule[] = [
   {
     id: "block_001",
-    name: "破坏性命令阻断",
+    name: "Block destructive commands",
     trigger: { tool: ["bash", "run_terminal_cmd"], condition: "dangerous_command" },
-    instruction: "阻断 rm -rf",
+    instruction: "Block rm -rf",
     intercept_level: "L1",
     status: "active",
     hit_count: 0, pass_count: 0, false_positive_count: 0,
@@ -18,9 +18,9 @@ const testRules: TamerRule[] = [
   },
   {
     id: "block_002",
-    name: "不用sudo",
+    name: "Avoid sudo",
     trigger: { tool: ["bash"], condition: "sudo" },
-    instruction: "不要用sudo",
+    instruction: "Do not use sudo",
     intercept_level: "L1",
     status: "active",
     hit_count: 0, pass_count: 0, false_positive_count: 0,
@@ -28,9 +28,9 @@ const testRules: TamerRule[] = [
   },
   {
     id: "write_001",
-    name: "改文件先确认",
+    name: "Confirm before editing files",
     trigger: { tool: ["write", "edit"], condition: "cross_file_or_delete" },
-    instruction: "改文件前确认",
+    instruction: "Confirm before editing files",
     intercept_level: "L2",
     status: "active",
     hit_count: 0, pass_count: 0, false_positive_count: 0,
@@ -45,8 +45,8 @@ test("checkAndBlock throws TamerBlockError for rm -rf", () => {
     () => checkAndBlock("bash", { command: "rm -rf /tmp" }, testRules),
     (e: Error) => {
       assert.equal(e.name, "TamerBlockError")
-      assert.ok(e.message.includes("tamer 阻断"))
-      assert.ok(e.message.includes("破坏性命令阻断"))
+      assert.ok(e.message.includes("Tamer blocked"))
+      assert.ok(e.message.includes("Block destructive commands"))
       return true
     }
   )
@@ -98,7 +98,7 @@ test("TamerBlockError has correct properties", () => {
   const err = new TamerBlockError(rule)
   assert.equal(err.name, "TamerBlockError")
   assert.equal(err.ruleId, "block_001")
-  assert.equal(err.ruleName, "破坏性命令阻断")
+  assert.equal(err.ruleName, "Block destructive commands")
   assert.ok(err.instruction.includes("rm -rf"))
 })
 
@@ -106,9 +106,9 @@ test("TamerBlockError has correct properties", () => {
 
 test("formatRulesForInjection produces non-empty string for active rules", () => {
   const injection = formatRulesForInjection(testRules)
-  assert.ok(injection.includes("tamer"))
-  assert.ok(injection.includes("破坏性命令阻断"))
-  assert.ok(injection.includes("改文件先确认"))
+  assert.ok(injection.includes("Tamer"))
+  assert.ok(injection.includes("Block destructive commands"))
+  assert.ok(injection.includes("Confirm before editing files"))
   assert.ok(injection.includes("⛔")) // L1 marker
 })
 
@@ -119,9 +119,9 @@ test("formatRulesForInjection returns empty for no active rules", () => {
 
 test("formatRulesForCompaction includes rule names", () => {
   const compaction = formatRulesForCompaction(testRules)
-  assert.ok(compaction.includes("tamer"))
-  assert.ok(compaction.includes("破坏性命令阻断"))
-  assert.ok(compaction.includes("恢复后必须继续遵守"))
+  assert.ok(compaction.includes("Tamer"))
+  assert.ok(compaction.includes("Block destructive commands"))
+  assert.ok(compaction.includes("Continue following these rules"))
 })
 
 test("countByLevel counts correctly", () => {
@@ -135,31 +135,29 @@ test("countByLevel counts correctly", () => {
 // === Trigger Detection Tests ===
 
 test("detectTriggers detects correction signals", () => {
-  assert.ok(detectTriggers("不对，这里应该用 async").isCorrection)
   assert.ok(detectTriggers("wrong, the function name is foo").isCorrection)
-  assert.ok(detectTriggers("记住，下次不要这样做").isCorrection)
+  assert.ok(detectTriggers("remember this for next time").isCorrection)
 })
 
 test("detectTriggers detects session end signals", () => {
-  assert.ok(detectTriggers("收工").isSessionEnd)
   assert.ok(detectTriggers("wrap up for today").isSessionEnd)
 })
 
 test("detectTriggers returns false for normal text", () => {
-  const result = detectTriggers("请帮我读取这个文件")
+  const result = detectTriggers("Please read this file")
   assert.equal(result.isCorrection, false)
   assert.equal(result.isSessionEnd, false)
 })
 
 test("memory confirmation requires explicit persistence intent", () => {
-  assert.equal(hasExplicitMemoryConfirmation("确认保存这条规则。"), true)
-  assert.equal(hasExplicitMemoryConfirmation("我明确确认把这条规则记住。"), true)
-  assert.equal(hasExplicitMemoryConfirmation("请确认一下测试结果。"), false)
-  assert.equal(hasExplicitMemoryConfirmation("这个实现没问题。"), false)
+  assert.equal(hasExplicitMemoryConfirmation("Confirmed."), true)
+  assert.equal(hasExplicitMemoryConfirmation("I explicitly confirm saving this rule."), true)
+  assert.equal(hasExplicitMemoryConfirmation("Please confirm the test result."), false)
+  assert.equal(hasExplicitMemoryConfirmation("This implementation looks good."), false)
 })
 
 test("countCorrections counts multiple corrections", () => {
-  assert.equal(countCorrections("不对，错了，重新做"), 3)
+  assert.equal(countCorrections("Wrong, fix it and do not repeat it again."), 3)
   assert.equal(countCorrections("all good here"), 0)
 })
 

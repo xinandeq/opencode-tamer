@@ -20,9 +20,9 @@ export class TamerBlockError extends Error {
 
   constructor(rule: TamerRule) {
     const msg = [
-      `🛡 tamer 阻断：${rule.name}`,
-      `原因：${rule.instruction}`,
-      `规则ID：${rule.id}`,
+      `🛡 Tamer blocked: ${rule.name}`,
+      `Reason: ${rule.instruction}`,
+      `Rule ID: ${rule.id}`,
     ].join("\n");
 
     super(msg);

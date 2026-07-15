@@ -17,9 +17,9 @@ import type { TamerRule } from "../../src/types.ts"
 const testRules: TamerRule[] = [
   {
     id: "test_block",
-    name: "破坏性命令阻断",
+    name: "Block destructive commands",
     trigger: { tool: ["bash", "run_terminal_cmd"], condition: "dangerous_command" },
-    instruction: "阻断 rm -rf 等命令",
+    instruction: "Block commands such as rm -rf",
     intercept_level: "L1",
     status: "active",
     hit_count: 0, pass_count: 0, false_positive_count: 0,
@@ -27,9 +27,9 @@ const testRules: TamerRule[] = [
   },
   {
     id: "test_sudo",
-    name: "不用sudo",
+    name: "Avoid sudo",
     trigger: { tool: ["bash", "run_terminal_cmd"], condition: "sudo" },
-    instruction: "不要用sudo",
+    instruction: "Do not use sudo",
     intercept_level: "L1",
     status: "active",
     hit_count: 0, pass_count: 0, false_positive_count: 0,
@@ -37,9 +37,9 @@ const testRules: TamerRule[] = [
   },
   {
     id: "test_write",
-    name: "改文件先确认",
+    name: "Confirm before editing files",
     trigger: { tool: ["write", "edit", "multiedit"], condition: "cross_file_or_delete" },
-    instruction: "改文件前确认",
+    instruction: "Confirm before editing files",
     intercept_level: "L2",
     status: "active",
     hit_count: 0, pass_count: 0, false_positive_count: 0,
@@ -47,9 +47,9 @@ const testRules: TamerRule[] = [
   },
   {
     id: "test_uncertain",
-    name: "不猜API",
+    name: "Do not guess APIs",
     trigger: { tool: ["*"], condition: "uncertainty_signal" },
-    instruction: "不要猜",
+    instruction: "Do not guess",
     intercept_level: "L3",
     status: "active",
     hit_count: 0, pass_count: 0, false_positive_count: 0,
@@ -57,9 +57,9 @@ const testRules: TamerRule[] = [
   },
   {
     id: "test_disabled",
-    name: "禁用规则",
+    name: "Disabled rule",
     trigger: { tool: ["bash"], condition: "always" },
-    instruction: "不应触发",
+    instruction: "Must not trigger",
     intercept_level: "L1",
     status: "disabled",
     hit_count: 0, pass_count: 0, false_positive_count: 0,
@@ -142,7 +142,7 @@ test("isBashTool detects bash tools", () => {
 
 test("hasUncertaintySignal detects uncertainty", () => {
   assert.ok(hasUncertaintySignal("maybe this is correct"))
-  assert.ok(hasUncertaintySignal("我不确定这个API"))
+  assert.ok(hasUncertaintySignal("I am not sure about this API"))
   assert.ok(!hasUncertaintySignal("the file is at /tmp/test"))
 })
 

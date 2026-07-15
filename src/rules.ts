@@ -19,7 +19,6 @@ const DANGEROUS_PATTERNS: RegExp[] = [
 
 // Uncertainty signal patterns
 const UNCERTAINTY_PATTERNS: RegExp[] = [
-  /可能/i, /也许/i, /我猜/i, /试试/i, /不确定/i, /大概/i,
   /maybe/i, /perhaps/i, /i\s+think/i, /not\s+sure/i, /guess/i,
 ];
 

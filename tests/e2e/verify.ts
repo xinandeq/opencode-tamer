@@ -38,18 +38,18 @@ check("Rules file is valid ACMF", validation.valid, validation.errors.join("; ")
 const injection = formatRulesForInjection(rules)
 check("L3 injection is non-empty", injection.length > 0)
 check("L3 injection contains tamer marker", injection.includes("tamer"))
-check("L3 injection contains rule names", injection.includes("破坏性命令阻断"))
+check("L3 injection contains rule names", injection.includes("Block destructive commands"))
 check("L3 injection contains L1 marker (⛔)", injection.includes("⛔"))
 
 // Test 3: Compaction injection
 const compaction = formatRulesForCompaction(rules)
 check("Compaction injection is non-empty", compaction.length > 0)
-check("Compaction injection contains rules", compaction.includes("破坏性命令阻断"))
+check("Compaction injection contains rules", compaction.includes("Block destructive commands"))
 
 // Test 4: L1 Block - rm -rf
 const rmResult = wouldBlock("bash", { command: "rm -rf /tmp/test" }, rules)
 check("L1 block: rm -rf is blocked", rmResult.blocked)
-check("L1 block: correct rule matched", rmResult.rule?.name === "破坏性命令阻断")
+check("L1 block: correct rule matched", rmResult.rule?.name === "Block destructive commands")
 
 // Test 5: L1 Block - git reset --hard
 const gitResult = wouldBlock("bash", { command: "git reset --hard HEAD~3" }, rules)
@@ -77,10 +77,10 @@ const ddResult = wouldBlock("bash", { command: "dd if=/dev/zero of=/dev/sda" }, 
 check("L1 block: dd if= is blocked", ddResult.blocked)
 
 // Test 11: Trigger detection
-check("Trigger: '不对' detected", detectTriggers("不对，这里应该用async").isCorrection)
-check("Trigger: '记住' detected", detectTriggers("记住，下次不要这样做").isCorrection)
-check("Trigger: '收工' detected", detectTriggers("收工").isSessionEnd)
-check("Trigger: normal text not triggered", !detectTriggers("请帮我读取文件").isCorrection)
+check("Trigger: 'wrong' detected", detectTriggers("Wrong, use async here").isCorrection)
+check("Trigger: 'remember' detected", detectTriggers("Remember this for next time").isCorrection)
+check("Trigger: 'done' detected", detectTriggers("Done for today").isSessionEnd)
+check("Trigger: normal text not triggered", !detectTriggers("Please read this file").isCorrection)
 
 // Test 12: Rule count
 const counts = countByLevel(rules)

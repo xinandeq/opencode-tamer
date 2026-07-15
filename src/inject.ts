@@ -25,17 +25,17 @@ export function formatRulesForInjection(rules: TamerRule[]): string {
 
   const ruleLines = active.map(r => {
     const level = r.intercept_level === "L1" ? "⛔" : r.intercept_level === "L2" ? "⚠️" : "💡";
-    return `- ${level} ${r.name}：${r.instruction}`;
+    return `- ${level} ${r.name}: ${r.instruction}`;
   }).join("\n");
 
   return [
-    "🛡 tamer 已激活（v0.0）。你有以下纠错规则：",
+    "🛡 Tamer is active. Apply these correction rules:",
     ruleLines,
     "",
-    "在执行任何操作前，检查是否触发以上规则。",
-    "⛔ 标记的规则会物理阻断你的操作。",
-    "⚠️ 标记的规则需要你先停下来确认。",
-    "💡 标记的规则是软性提醒。",
+    "Check these rules before every action.",
+    "⛔ rules physically block matching actions.",
+    "⚠️ rules require you to stop and confirm first.",
+    "💡 rules are advisory reminders.",
   ].join("\n");
 }
 
@@ -56,8 +56,8 @@ export function formatRulesForCompaction(rules: TamerRule[]): string {
   const lines = active.map(r => `- ${r.name}: ${r.instruction}`).join("\n");
 
   return [
-    "## tamer 纠错规则（压缩后保留）",
-    "恢复后必须继续遵守以下规则：",
+    "## Tamer correction rules retained after compaction",
+    "Continue following these rules after context recovery:",
     lines,
   ].join("\n");
 }

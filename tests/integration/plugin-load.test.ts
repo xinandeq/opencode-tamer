@@ -35,7 +35,7 @@ test("detects a correction from the real TextPart.text field", async () => {
   const hooks = await loadHooks()
   await hooks["chat.message"]?.(
     { sessionID: "session-test" },
-    { parts: [{ type: "text", text: "不对，这里应该先运行测试。" }] } as never,
+    { parts: [{ type: "text", text: "Wrong, you should run tests first." }] } as never,
   )
   const hits = readFileSync(join(tamerDir, "hits.jsonl"), "utf-8")
     .trim()
@@ -53,18 +53,18 @@ test("persists, lists, and disables an explicitly confirmed rule", async () => {
 
   await assert.rejects(
     remember.execute(
-      { name: "未确认规则", instruction: "这条规则不应被保存。", intercept_level: "L3" },
+      { name: "Unconfirmed rule", instruction: "This rule must not be saved.", intercept_level: "L3" },
       {} as never,
     ),
     /explicit user confirmation/,
   )
   await hooks["chat.message"]?.(
     { sessionID: "session-confirmation" },
-    { parts: [{ type: "text", text: "我明确确认把这条规则记住。" }] } as never,
+    { parts: [{ type: "text", text: "I explicitly confirm saving this rule." }] } as never,
   )
 
   const remembered = await remember.execute(
-    { name: "测试后再完成", instruction: "声明完成前必须运行相关测试。", intercept_level: "L3" },
+    { name: "Test before completion", instruction: "Run the relevant tests before declaring completion.", intercept_level: "L3" },
     {} as never,
   )
   assert.match(String(remembered), /Remembered rule/)
@@ -73,7 +73,7 @@ test("persists, lists, and disables an explicitly confirmed rule", async () => {
   assert.ok(personal)
   if (!personal) return
   const listed = await manage.execute({ action: "list" }, {} as never)
-  assert.match(String(listed), /测试后再完成/)
+  assert.match(String(listed), /Test before completion/)
   const disabled = await manage.execute({ action: "disable", rule_id: personal.id }, {} as never)
   assert.match(String(disabled), /disabled/)
   assert.equal(loadRulesFile().rules.find((rule) => rule.id === personal.id)?.status, "disabled")

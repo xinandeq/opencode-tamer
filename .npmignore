@@ -1,0 +1,7 @@
+docker/
+tests/
+scripts/
+docs/
+node_modules/
+*.tgz
+

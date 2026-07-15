@@ -1,0 +1,5 @@
+node_modules/
+.tamer/
+*.tgz
+.DS_Store
+

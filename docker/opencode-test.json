@@ -1,0 +1,22 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "minimax": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "MiniMax",
+      "options": {
+        "baseURL": "https://api.minimax.chat/v1",
+        "apiKey": "{env:MINIMAX_API_KEY}"
+      },
+      "models": {
+        "MiniMax-M3": {},
+        "MiniMax-M2.7": {}
+      }
+    }
+  },
+  "model": "minimax/MiniMax-M2.7",
+  "agent": {
+    "general": { "steps": 10, "model": "minimax/MiniMax-M2.7" }
+  },
+  "plugin": ["opencode-tamer"]
+}

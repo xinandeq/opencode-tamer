@@ -1,0 +1,88 @@
+/**
+ * tamer v0.0 — Correction Trigger Word Detection
+ *
+ * Detects when user is correcting the Agent, for future rule creation.
+ * In v0.0, only logs the detection. v0.1+ will create rules.
+ */
+
+// Correction trigger words (Chinese + English)
+const CORRECTION_TRIGGERS: RegExp[] = [
+  /不对/i, /错了/i, /记住/i, /纠正/i, /别再犯/i, /不是这样/i, /应该是/i, /改一下/i, /重新/i, /说过/i, /又来了/i, /不是/i,
+  /wrong/i, /no[,.]/i, /stop/i, /don'?t/i, /remember/i, /correct/i, /fix/i, /not\s+that/i, /again/i,
+];
+
+// Session end signals
+const SESSION_END_TRIGGERS: RegExp[] = [
+  /收工/i, /结束/i, /done/i, /finish/i, /wrap\s+up/i,
+];
+
+export interface TriggerResult {
+  isCorrection: boolean;
+  isSessionEnd: boolean;
+  matchedPattern?: string;
+  snippet?: string;
+}
+
+const MEMORY_CONFIRMATION_PATTERNS: RegExp[] = [
+  /^\s*(确认|我确认|明确确认|同意保存|确认保存|yes|confirmed)[。.!！]?\s*$/i,
+  /(?:我|本人)?(?:明确)?确认(?:保存|记住|把这条规则记住|这条规则)/i,
+  /(?:请|可以)记住这条规则/i,
+]
+
+/** Return true only for an explicit request to persist a rule. */
+export function hasExplicitMemoryConfirmation(text: string): boolean {
+  return MEMORY_CONFIRMATION_PATTERNS.some((pattern) => pattern.test(text))
+}
+
+/**
+ * Detect correction trigger words in user message.
+ *
+ * @param text - user message content
+ * @returns detection result
+ */
+export function detectTriggers(text: string): TriggerResult {
+  if (!text || typeof text !== "string") {
+    return { isCorrection: false, isSessionEnd: false };
+  }
+
+  // Check correction triggers
+  for (const pattern of CORRECTION_TRIGGERS) {
+    if (pattern.test(text)) {
+      return {
+        isCorrection: true,
+        isSessionEnd: false,
+        matchedPattern: pattern.source,
+        snippet: text.slice(0, 200),
+      };
+    }
+  }
+
+  // Check session end triggers
+  for (const pattern of SESSION_END_TRIGGERS) {
+    if (pattern.test(text)) {
+      return {
+        isCorrection: false,
+        isSessionEnd: true,
+        matchedPattern: pattern.source,
+        snippet: text.slice(0, 200),
+      };
+    }
+  }
+
+  return { isCorrection: false, isSessionEnd: false };
+}
+
+/**
+ * Count corrections in a message (for "3 corrections → prompt" feature)
+ */
+export function countCorrections(text: string): number {
+  if (!text) return 0;
+  let count = 0;
+  for (const pattern of CORRECTION_TRIGGERS) {
+    const matches = text.match(new RegExp(pattern.source, "gi"));
+    if (matches) {
+      count += matches.length;
+    }
+  }
+  return count;
+}

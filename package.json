@@ -1,0 +1,27 @@
+{
+  "name": "opencode-tamer",
+  "version": "0.1.0",
+  "description": "Turn confirmed coding-agent corrections into portable, enforceable policies",
+  "type": "module",
+  "main": "src/plugin.ts",
+  "scripts": {
+    "test:unit": "bun test tests/unit/",
+    "test:integration": "bun test tests/integration/",
+    "test:all": "bun test tests/unit/ tests/integration/",
+    "typecheck": "tsc --noEmit",
+    "release:check": "bun run typecheck && bun run test:all && npm pack --dry-run --cache /tmp/tamer-npm-cache",
+    "prepublishOnly": "bun run typecheck && bun run test:all"
+  },
+  "files": ["src", "seeds", "README.md", "LICENSE"],
+  "dependencies": {
+    "@opencode-ai/plugin": "^1.18.1"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/node": "latest",
+    "typescript": "latest"
+  },
+  "license": "MIT",
+  "keywords": ["opencode", "agent", "correction", "memory", "hook", "plugin"],
+  "author": "Chen Xin"
+}
